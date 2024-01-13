@@ -1,35 +1,73 @@
-// import React from "react";
-// import {Line} from "react-chartjs-2";
+import React, { useState, useEffect } from 'react';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ChartData, ChartOptions } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 
-// const SalesChart =({chartData})=>{
-//     //"charData" is the prop passed with the data for the chart
-//     const data={
-//         labels:chartData.map(d=>d.label),
-//         datasets:[
-//             {
-//                 label:"Sales",
-//                 data:chartData.map(d=>d.value),
-//                 file:false,
-//                 backgroundColor:"rgb(75,192,192)",
-//                 borderColor:"rgba(75,192,192,0.2)",
-//             },
-//         ],
-//     };
-//     const options={
-//         //options for the chart
-//         responsive:true,
-//         scales:{
-//             yAxes:[
-//                 {
-//                     ticks:{
-//                         beginAtZero:true,
-//                     }
-//                 }
-//             ]
-//         }
+ChartJS.register(CategoryScale, LinearScale, BarElement);
 
-//     }
-//     return <Line data={data} options={options}/>
-// }
+// Define a type for your data structure if it's complex
+// For example, if your data has a specific shape, replace 'any' with the correct type
+type ChartDataType = any[];
 
-// export default SalesChart;
+const SalesChart: React.FC = () => {
+  const [chartData, setChartData] = useState<ChartDataType>([]);
+
+  useEffect(() => {
+    // Replace with the correct path to your data file
+    fetch("stackline_frontend_assessment_data_2021.json")
+      .then(res => res.json())
+      .then(datas => {
+        console.log(datas);
+        setChartData(datas);
+      });
+  }, []);
+
+  const data: ChartData<'bar', number[], string> = {
+    labels: chartData.map(d => d.label), // Assuming your data structure has a 'label' property
+    datasets: [
+      {
+        label: '# of Votes',
+        data: chartData.map(d => d.value), // Assuming your data structure has a 'value' property
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 205, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(201, 203, 207, 0.2)'
+        ],
+        borderWidth: 1
+      }
+    ]
+  };
+
+  const options: ChartOptions<'bar'> = {
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    },
+    plugins: {
+      legend: {
+        labels: {
+          font: {
+            size: 26
+          }
+        }
+      }
+    }
+  };
+
+  return (
+    <div>
+      <Bar 
+        data={data}
+        options={options}
+        height={400}
+      />
+    </div>
+  );
+};
+
+export default SalesChart;
