@@ -11,21 +11,30 @@ type ChartDataType = any[];
 const SalesChart: React.FC = () => {
   const [chartData, setChartData] = useState<ChartDataType>([]);
 
-  useEffect(() => {
-    // Replace with the correct path to your data file
-    fetch("stackline_frontend_assessment_data_2021.json")
-      .then(res => res.json())
-      .then(datas => {
-        console.log(datas);
-        setChartData(datas);
-      });
-  }, []);
-
+useEffect(() => {
+  // This assumes that 'stackline_frontend_assessment_data_2021.json' is in the 'public' directory
+  fetch("/stackline_frontend_assessment_data_2021.json")
+    .then(response => {
+      if (!response.ok) {
+        // If the response is not 2xx, throw an error
+        throw new Error('Network response was not ok');
+      }
+      return response.json(); // Parse JSON data from the response
+    })
+    .then(data => {
+      setChartData(data); // Set the data to state
+    })
+    .catch(error => {
+      console.error('Fetch error:', error); // Log any errors
+    });
+}, []);
+console.log(chartData);
   const data: ChartData<'bar', number[], string> = {
-    labels: chartData.map(d => d.label), // Assuming your data structure has a 'label' property
+    labels: chartData.map(d => d.sales[0].weekEnding), // Assuming your data structure has a 'label' property
+    
     datasets: [
       {
-        label: '# of Votes',
+        label: '',
         data: chartData.map(d => d.value), // Assuming your data structure has a 'value' property
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
