@@ -23,10 +23,11 @@
   display: flex;
   align-self: start;/* logo horizontally */
   align-items: center; /*  logo vertically */
-  border-bottom: 1px solid #040b69; /* Add a border as per the image */
+  border-bottom: 1px solid #040b69; /* a border as per the image */
   width: 100%;
   
 }
+
 
 /* Style the logo  */
 .logo {
@@ -70,9 +71,40 @@
 }
 /*style chart-container*/
 .chart-container {
-  margin-top: 50px; /* Adjust this value as needed to match the image */
-  width: calc(100% - 250px); /* Adjust the width to take into account the sidebar width */
+  margin-top: 50px; 
+  width: calc(100% - 250px); 
   padding: 20px; /* Add padding if needed */
 }
 
+/* Updated Table Styles */
+.custom-table-container {
+  grid-area: custom-table-container;
+  background-color: var(--container-background-color);
+  border-left: var(--thin-vertical-border);
+  border-right: var(--thick-vertical-border);
+  border-bottom: var(--horizontal-border);
+}
+
+#custom-table {
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th {
+  padding: 2%;
+  font-weight: 300;
+}
+
+tbody td {
+  border-top: 2px solid var(--light-gray);
+  padding: 2%;
+}
+
+th:hover {
+  cursor: pointer;
+}
 

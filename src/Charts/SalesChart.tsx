@@ -4,38 +4,44 @@ import { Bar } from 'react-chartjs-2';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement);
 
-// Define a type for your data structure if it's complex
-// For example, if your data has a specific shape, replace 'any' with the correct type
-type ChartDataType = any[];
+// data structure
+interface SalesData {
+  sales: {
+    weekEnding: string;
+    value: number;
+  }[];
+}
 
 const SalesChart: React.FC = () => {
-  const [chartData, setChartData] = useState<ChartDataType>([]);
+  const [chartData, setChartData] = useState<SalesData>({ sales: [] });
 
-useEffect(() => {
-  // This assumes that 'stackline_frontend_assessment_data_2021.json' is in the 'public' directory
-  fetch("/stackline_frontend_assessment_data_2021.json")
-    .then(response => {
-      if (!response.ok) {
-        // If the response is not 2xx, throw an error
-        throw new Error('Network response was not ok');
-      }
-      return response.json(); // Parse JSON data from the response
-    })
-    .then(data => {
-      setChartData(data); // Set the data to state
-    })
-    .catch(error => {
-      console.error('Fetch error:', error); // Log any errors
-    });
-}, []);
-console.log(chartData);
+  useEffect(() => {
+    fetch("/stackline_frontend_assessment_data_2021.json")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (Array.isArray(data)) {
+          // response structure
+          setChartData({ sales: data });
+        } else {
+          throw new Error('Invalid JSON format');
+        }
+      })
+      .catch(error => {
+        console.error('Fetch error:', error);
+      });
+  }, []);
+
   const data: ChartData<'bar', number[], string> = {
-    labels: chartData.map(d => d.sales[0].weekEnding), // Assuming your data structure has a 'label' property
-    
+    labels: chartData.sales.map(d => d.weekEnding),
     datasets: [
       {
         label: '',
-        data: chartData.map(d => d.value), // Assuming your data structure has a 'value' property
+        data: chartData.sales.map(d => d.value),
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(255, 159, 64, 0.2)',
@@ -70,7 +76,7 @@ console.log(chartData);
 
   return (
     <div>
-      <Bar 
+      <Bar
         data={data}
         options={options}
         height={400}

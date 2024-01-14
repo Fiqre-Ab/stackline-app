@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import data from "./stackline_frontend_assessment_data_2021.json";
-import logo from "./stackline_logo.svg";
+import data from "./data/stackline_frontend_assessment_data_2021.json";
+import logo from "./assets/stackline_logo.svg";
 import SalesChart from "./Charts/SalesChart";
-
+import SortableTable from './components/SortableTable';
 function App() {
   const [selectedProduct, setSelectedProduct] = useState(data[0]);
   
@@ -39,9 +39,11 @@ function App() {
           </div>
         </div>
         <div className="chart-container">
-          {/* The chart related component should be rendered here */
+          {/* The chart component e*/
             <SalesChart />
+           
           }
+          <SortableTable />
         </div>
       </div>
     </div>
